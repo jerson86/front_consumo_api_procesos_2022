@@ -1,4 +1,6 @@
 //funciones propias de la app
+const urlApi = "";//colocar la url con el puerto
+
 async function login(){
     var myForm = document.getElementById("myForm");
     var formData = new FormData(myForm);
@@ -14,7 +16,7 @@ async function login(){
         },
         body: JSON.stringify(jsonData)
     }
-    const request = await fetch("api/auth/login",settings);
+    const request = await fetch(urlApi+"/api/auth/login",settings);
     //console.log(await request.text());
     if(request.ok){
         const respuesta = await request.json();
@@ -36,7 +38,7 @@ function listar(){
             'Authorization': localStorage.token
         },
     }
-    fetch("api/users",settings)
+    fetch(urlApi+"/api/users",settings)
     .then(response => response.json())
     .then(function(data){
         
@@ -78,7 +80,7 @@ function eliminaUsuario(id){
             'Authorization': localStorage.token
         },
     }
-    fetch("api/users/"+id,settings)
+    fetch(urlApi+"/api/users/"+id,settings)
     .then(response => response.json())
     .then(function(data){
         listar();
@@ -96,7 +98,7 @@ function verModificarUsuario(id){
             'Authorization': localStorage.token
         },
     }
-    fetch("api/users/"+id,settings)
+    fetch(urlApi+"/api/users/"+id,settings)
     .then(response => response.json())
     .then(function(usuario){
             var cadena='';
@@ -135,7 +137,7 @@ async function modificarUsuario(id){
     for(var [k, v] of formData){//convertimos los datos a json
         jsonData[k] = v;
     }
-    const request = await fetch("api/users/"+id, {
+    const request = await fetch(urlApi+"/api/users/"+id, {
         method: 'PUT',
         headers:{
             'Accept': 'application/json',
@@ -162,7 +164,7 @@ function verUsuario(id){
             'Authorization': localStorage.token
         },
     }
-    fetch("api/users/"+id,settings)
+    fetch(urlApi+"/api/users/"+id,settings)
     .then(response => response.json())
     .then(function(usuario){
             var cadena='';
@@ -230,7 +232,7 @@ async function registrarUsuario(){
     for(var [k, v] of formData){//convertimos los datos a json
         jsonData[k] = v;
     }
-    const request = await fetch("api/users", {
+    const request = await fetch(urlApi+"/api/users", {
         method: 'POST',
         headers:{
             'Accept': 'application/json',
