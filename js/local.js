@@ -40,48 +40,32 @@ function listar(){
     .then(response => response.json())
     .then(function(data){
         
-        //if(data.lenght>0){
             var usuarios = '';
             for(const usuario of data){
                 console.log(usuario.email)
-                usuarios += '<tr>'+
-                '<th scope="row">'+usuario.id+'</th>'+
-                '<td>'+usuario.firstName+'</td>'+
-                '<td>'+usuario.lastName+'</td>'+
-                '<td>'+usuario.email+'</td>'+
-                '<td>'+
-                  '<button type="button" class="btn btn-outline-danger" onclick="eliminaUsuario(\''+usuario.id+'\')"><i class="fa-solid fa-user-minus"></i></button>'+
-                  '<a href="#" onclick="verModificarUsuario(\''+usuario.id+'\')" class="btn btn-outline-warning"><i class="fa-solid fa-user-pen"></i></a>'+
-                  '<a href="#" onclick="verUsuario(\''+usuario.id+'\')" class="btn btn-outline-info"><i class="fa-solid fa-eye"></i></a>'+
-                '</td>'+
-              '</tr>';
+                usuarios += `
+                <tr>
+                    <th scope="row">${usuario.id}</th>
+                    <td>${usuario.firstName}</td>
+                    <td>${usuario.lastName}</td>
+                    <td>${usuario.email}</td>
+                    <td>
+                    <button type="button" class="btn btn-outline-danger" 
+                    onclick="eliminaUsuario('${usuario.id}')">
+                        <i class="fa-solid fa-user-minus"></i>
+                    </button>
+                    <a href="#" onclick="verModificarUsuario('${usuario.id}')" class="btn btn-outline-warning">
+                        <i class="fa-solid fa-user-pen"></i>
+                    </a>
+                    <a href="#" onclick="verUsuario('${usuario.id}')" class="btn btn-outline-info">
+                        <i class="fa-solid fa-eye"></i>
+                    </a>
+                    '</td>
+                </tr>`;
+                
             }
             document.getElementById("listar").innerHTML = usuarios;
-        //}
     })
-}
-
-
-
-async function sendData(path){
-    validaToken();
-    var myForm = document.getElementById("myForm");
-    var formData = new FormData(myForm);
-    var jsonData = {};
-    for(var [k, v] of formData){//convertimos los datos a json
-        jsonData[k] = v;
-    }
-    const request = await fetch(path, {
-        method: 'POST',
-        headers:{
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': localStorage.token
-        },
-        body: JSON.stringify(jsonData)
-    });
-    myForm.reset();
-    console.log(await request.text())
 }
 
 function eliminaUsuario(id){
@@ -117,22 +101,25 @@ function verModificarUsuario(id){
     .then(function(usuario){
             var cadena='';
             if(usuario){                
-                cadena = '<div class="p-3 mb-2 bg-light text-dark">'+
-                '<h1 class="display-5"><i class="fa-solid fa-user-pen"></i> Modificar Usuario</h1>'+
-                '</div>'+
+                cadena = `
+                <div class="p-3 mb-2 bg-light text-dark">
+                    <h1 class="display-5"><i class="fa-solid fa-user-pen"></i> Modificar Usuario</h1>
+                </div>
               
-              '<form action="" method="post" id="myForm">'+
-                '<input type="hidden" name="id" id="id" value="'+usuario.id+'">'+
-                '<label for="firstName" class="form-label">First Name</label>'+
-                '<input type="text" class="form-control" name="firstName" id="firstName" required value="'+usuario.firstName+'"> <br>'+
-                '<label for="lastName"  class="form-label">Last Name</label>'+
-                '<input type="text" class="form-control" name="lastName" id="lastName" required value="'+usuario.lastName+'"> <br>'+
-                '<label for="email" class="form-label">Email</label>'+
-                '<input type="email" class="form-control" name="email" id="email" required value="'+usuario.email+'"> <br>'+
-                '<label for="password" class="form-label">Password</label>'+
-                '<input type="password" class="form-control" id="password" name="password" required> <br>'+
-                '<button type="button" class="btn btn-outline-warning" onclick="modificarUsuario(\''+usuario.id+'\')">Modificar</button>'+
-            '</form>';
+                <form action="" method="post" id="myForm">
+                    <input type="hidden" name="id" id="id" value="${usuario.id}">
+                    <label for="firstName" class="form-label">First Name</label>
+                    <input type="text" class="form-control" name="firstName" id="firstName" required value="${usuario.firstName}"> <br>
+                    <label for="lastName"  class="form-label">Last Name</label>
+                    <input type="text" class="form-control" name="lastName" id="lastName" required value="${usuario.lastName}"> <br>
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" name="email" id="email" required value="${usuario.email}"> <br>
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" required> <br>
+                    <button type="button" class="btn btn-outline-warning" 
+                        onclick="modificarUsuario('${usuario.id}')">Modificar
+                    </button>
+                </form>`;
             }
             document.getElementById("contentModal").innerHTML = cadena;
             var myModal = new bootstrap.Modal(document.getElementById('modalUsuario'))
@@ -180,14 +167,15 @@ function verUsuario(id){
     .then(function(usuario){
             var cadena='';
             if(usuario){                
-                cadena = '<div class="p-3 mb-2 bg-light text-dark">'+
-                '<h1 class="display-5"><i class="fa-solid fa-user-pen"></i> Visualizar Usuario</h1>'+
-                '</div>'+
-                '<ul class="list-group">'+
-                '<li class="list-group-item">Nombre: '+usuario.firstName+'</li>'+
-                '<li class="list-group-item">Apellido: '+usuario.lastName+'</li>'+
-                '<li class="list-group-item">Correo: '+usuario.email+'</li>'+
-                '</ul>';
+                cadena = `
+                <div class="p-3 mb-2 bg-light text-dark">
+                    <h1 class="display-5"><i class="fa-solid fa-user-pen"></i> Visualizar Usuario</h1>
+                </div>
+                <ul class="list-group">
+                    <li class="list-group-item">Nombre: ${usuario.firstName}</li>
+                    <li class="list-group-item">Apellido: ${usuario.lastName}</li>
+                    <li class="list-group-item">Correo: ${usuario.email}</li>
+                </ul>`;
               
             }
             document.getElementById("contentModal").innerHTML = cadena;
@@ -204,31 +192,32 @@ function alertas(mensaje,tipo){
     else{//danger rojo
         color = "danger"
     }
-    var alerta ='<div class="alert alert-'+color+' alert-dismissible fade show" role="alert">'+
-                    '<strong><i class="fa-solid fa-triangle-exclamation"></i></strong>' +
-                    mensaje+
-                    '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>'+
-                '</div>';
+    var alerta =`<div class="alert alert-'+color+' alert-dismissible fade show" role="alert">
+                    <strong><i class="fa-solid fa-triangle-exclamation"></i></strong>
+                        ${mensaje}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                 </div>`;
     document.getElementById("datos").innerHTML = alerta;
 }
 
 function registerForm(){
-    cadena = '<div class="p-3 mb-2 bg-light text-dark">'+
-                '<h1 class="display-5"><i class="fa-solid fa-user-pen"></i> Registrar Usuario</h1>'+
-                '</div>'+
+    cadena = `
+            <div class="p-3 mb-2 bg-light text-dark">
+                <h1 class="display-5"><i class="fa-solid fa-user-pen"></i> Registrar Usuario</h1>
+            </div>
               
-              '<form action="" method="post" id="myForm">'+
-                '<input type="hidden" name="id" id="id">'+
-                '<label for="firstName" class="form-label">First Name</label>'+
-                '<input type="text" class="form-control" name="firstName" id="firstName" required> <br>'+
-                '<label for="lastName"  class="form-label">Last Name</label>'+
-                '<input type="text" class="form-control" name="lastName" id="lastName" required> <br>'+
-                '<label for="email" class="form-label">Email</label>'+
-                '<input type="email" class="form-control" name="email" id="email" required> <br>'+
-                '<label for="password" class="form-label">Password</label>'+
-                '<input type="password" class="form-control" id="password" name="password" required> <br>'+
-                '<button type="button" class="btn btn-outline-info" onclick="registrarUsuario()">Registrar</button>'+
-            '</form>';
+            <form action="" method="post" id="myForm">
+                <input type="hidden" name="id" id="id">
+                <label for="firstName" class="form-label">First Name</label>
+                <input type="text" class="form-control" name="firstName" id="firstName" required> <br>
+                <label for="lastName"  class="form-label">Last Name</label>
+                <input type="text" class="form-control" name="lastName" id="lastName" required> <br>
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" name="email" id="email" required> <br>
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" name="password" required> <br>
+                <button type="button" class="btn btn-outline-info" onclick="registrarUsuario()">Registrar</button>
+            </form>`;
             document.getElementById("contentModal").innerHTML = cadena;
             var myModal = new bootstrap.Modal(document.getElementById('modalUsuario'))
             myModal.toggle();
